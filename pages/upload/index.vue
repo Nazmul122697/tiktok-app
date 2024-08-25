@@ -1,15 +1,18 @@
 <template>
+  <uploadError :errorType="errorType" />
   <UploadLayout>
     <div
       class="w-full ml-[80px] mb-[40px] bg-white shadow-lg rounded-md py-6 md:px-10 px-4 mt-[70px]"
     >
       <div>
         <div class="text-[23px] font-semibold">Upload Video</div>
-        <div class="text-gray-400 mt-1">Post a video to your account</div>
+        <div class="mt-1 text-gray-400">Post a video to your account</div>
       </div>
-      <div class="mt-8 md:flex gap-6">
+      <div class="gap-6 mt-8 md:flex">
         <label
-          v-if="false"
+          v-if="!fileDisplay"
+          @drop.prevent="onDrop"
+          @dragover.prevent=""
           for="fileInput"
           class="md:mx-0 mx-auto mt-4 mb-6 flex flex-col items-center justify-center w-full max-w-[260px] h-[478px] text-center p-3 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-100 cursor-pointer"
         >
@@ -18,7 +21,7 @@
           <div class="mt-1.5 text-gray-500 text-[13px]">
             Or drag and drop a file
           </div>
-          <div class="mt-12 text-gray-400 text-sm">MP4</div>
+          <div class="mt-12 text-sm text-gray-400">MP4</div>
           <div class="mt-2 text-gray-400 text-[13px]">Up to 30 minutes</div>
           <div class="mt-2 text-gray-400 text-[13px]">Less then 2 GB</div>
           <div
@@ -26,19 +29,26 @@
           >
             Select file
           </div>
-          <input type="file" ref="file" id="fileInput" accept=".mp4" hidden />
+          <input
+            type="file"
+            @input="onChange"
+            ref="file"
+            id="fileInput"
+            accept=".mp4"
+            hidden
+          />
         </label>
         <div
           v-else
           class="md:mx-0 mx-auto mt-4 md:mb-12 mb-16 flex items-center justify-center w-full max-w-[260px] h-[540px] p-3 cursor-pointer relative rounded-2xl"
         >
-          <div class="bg-black h-full w-full" />
+          <div class="w-full h-full bg-black" />
           <img
             class="absolute z-20 pointer-events-note"
             src="~/assets/images/mobile-case.png"
           />
           <img
-            class="absolute right-4 button-5 z-20"
+            class="absolute z-20 right-4 button-5"
             width="90"
             src="~/assets/images/tiktok-logo-white.png"
           />
@@ -47,10 +57,10 @@
             loop
             muted
             class="absolute rounded-xl object-cover z-10 p-[13px] w-full h-full"
-            src="/public/223928_small.mp4"
+            :src="fileDisplay"
           />
           <div
-            class="absolute -bottom-12 flex items-center shadow justify-between z-58 rounded-xl border w-full p-2 border-gray-300"
+            class="absolute flex items-center justify-between w-full p-2 border border-gray-300 shadow -bottom-12 z-58 rounded-xl"
           >
             <div class="flex items-center truncate">
               <Icon
@@ -59,10 +69,10 @@
                 class="min-w-[16px]"
               />
               <div class="text-[11px] pl-1 truncate text-ellipsis">
-                Video Name
+                {{fileData.name}}
               </div>
             </div>
-            <button class="text-[11px] ml-2 font-semibold">Change</button>
+            <button @click="$event=>clearVideo()" class="text-[11px] ml-2 font-semibold">Change</button>
           </div>
         </div>
 
@@ -93,12 +103,29 @@
           </div>
 
           <div class="mt-5">
-            <div class="flex justify-between items-center">
+            <div class="flex items-center justify-between">
               <div>Caption</div>
-              <div>0/150</div>
+              <div>{{caption.length}}/150</div>
             </div>
-            <input maxlength="150" type="text" class="w-full border p-2.5 rounded-md focus:outline-none"/>
-            
+            <input
+              v-model="caption"
+              maxlength="150"
+              type="text"
+              class="w-full border p-2.5 rounded-md focus:outline-none"
+            />
+          </div>
+          <div class="flex gap-3">
+            <button
+              @click="($event) => discardVideo()"
+              class="px-10 py-2.5 mt-8 border text-[16px] hover:bg-gray-100 rounded-sm"
+            >
+              Discard
+            </button>
+            <button
+              class="px-10 py-2.5 mt-8 border text-[16px] bg-[#F02c56] text-white rounded-sm"
+            >
+              Post
+            </button>
           </div>
         </div>
       </div>
@@ -107,4 +134,55 @@
 </template>
 <script setup>
 import UploadLayout from "~/layouts/UploadLayout.vue";
+
+let file = ref(null);
+let fileDisplay = ref(null);
+let errorType = ref(null);
+let caption = ref("");
+let fileData = ref(null);
+let errors = ref(null);
+let isUploading = ref(false);
+
+watch(() => caption.value,(caption) =>{
+  if(caption.length >= 150){
+    errorType.value = 'caption'
+    return
+  }
+  errorType.value = null
+})
+
+let onChange = () => {
+  fileDisplay.value = URL.createObjectURL(file.value.files[0]);
+  fileData.value = file.value.files[0];
+};
+
+const onDrop = (e) => {
+  errorType.value = "";
+  file.value = e.dataTransfer.files[0];
+  fileData.value = e.dataTransfer.files[0];
+
+  let extension = file.value.name.substring(
+    file.value.name.lastIndexOf(".") + 1
+  );
+
+  if (extension !== "mp4") {
+    errorType.value = "file";
+    return;
+  }
+
+  fileDisplay.value = URL.createObjectURL(e.dataTransfer.files[0]);
+};
+
+const discardVideo = () => {
+  file.value = null;
+  fileData.value = null;
+  fileDisplay.value = null;
+  caption.value = "";
+};
+
+const clearVideo = () => {
+  file.value = null;
+  fileData.value = null;
+  fileDisplay.value = null;
+};
 </script>

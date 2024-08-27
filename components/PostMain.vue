@@ -1,5 +1,5 @@
 <template lang="">
-  <div id="PostMain" class="flex border-b py-6">
+  <div id="PostMain" class="flex py-6 border-b">
     <div class="cursor-pointer">
       <img
         class="rounded-full max-h-[60px]"
@@ -7,10 +7,10 @@
         src="https://picsum.photos/id/8/300/320"
       />
     </div>
-    <div class="pl-3 w-full px-4">
+    <div class="w-full px-4 pl-3">
       <div class="flex items-center justify-between pb-0.5">
         <button>
-          <span class="font-bold hover:underline cursor-pointer"
+          <span class="font-bold cursor-pointer hover:underline"
             >User Name</span
           >
           <span class="text-[13px] text-light text-gray-500 pl-1 cursor-pointer"
@@ -42,11 +42,11 @@
           class="relative min-h-[480px] max-h-[580px] max-w-[200px] flex items-center bg-black rounded-xl cursor-pointer"
         >
           <video
-            src="/public/223928_small.mp4"
+            src="~/assets/videos/223928_small.mp4"
             ref="video"
             loop
             muted
-            class="rounded-xl object-cover mx-auto h-full"
+            class="object-cover h-full mx-auto rounded-xl"
           />
           <img
             class="absolute right-2 bottom-14"
@@ -57,19 +57,19 @@
         <div class="relative mr-[75px]">
           <div class="absolute bottom-0 pl-2">
             <div class="pb-4 text-center">
-              <button class="rounded-full bg-gray-200 p-2 cursor-pointer">
+              <button class="p-2 bg-gray-200 rounded-full cursor-pointer">
                 <Icon name="mdi:heart" size="25" />
               </button>
               <span class="text-xs text-gray-800">55</span>
             </div>
             <div class="pb-4 text-center">
-              <button class="rounded-full bg-gray-200 p-2 cursor-pointer">
+              <button class="p-2 bg-gray-200 rounded-full cursor-pointer">
                 <Icon name="bx:bxs-message-rounded-dots" size="25" />
               </button>
               <span class="text-xs text-gray-800">55</span>
             </div>
             <div class="pb-4 text-center">
-              <button class="rounded-full bg-gray-200 p-2 cursor-pointer">
+              <button class="p-2 bg-gray-200 rounded-full cursor-pointer">
                 <Icon name="ri:share-forward-fill" size="25" />
               </button>
               <span class="text-xs text-gray-800">55</span>

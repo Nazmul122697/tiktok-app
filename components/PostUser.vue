@@ -22,7 +22,7 @@
         ref="video"
         muted
         loop
-        src="../public/223928_small.mp4"
+        src="~/assets/videos/223928_small.mp4"
       />
     </div>
 
@@ -70,5 +70,5 @@ const isHover = (bool) => {
   } else {
     video.value.pause();
   }
-};
+}; 
 </script>

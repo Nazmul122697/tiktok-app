@@ -40,7 +40,7 @@
       />
 
       <div
-        v-if="true"
+        v-if="!isLoaded"
         class="flex items-center justify-center h-screen bg-black bg-opacity-70 lg:min-[480px]"
       >
         <Icon
@@ -184,7 +184,14 @@
             placeholder="Add Comment ......."
           />
         </div>
-        <button>Post</button>
+        <button
+          :disabled="comment"
+          @click="($event) => addComment()"
+          :class="comment ? 'text-[#F02c56] cursor-pointer' : 'text-gray-400'"
+          class="pr-1 ml-5 text-sm font-semibold"
+        >
+          Post
+        </button>
       </div>
     </div>
   </div>
@@ -192,4 +199,35 @@
 <script setup>
 let inputFocused = ref(false);
 let comment = ref(null);
+
+const route = useRoute();
+const router = useRouter();
+
+let video = ref(null);
+let isLoaded = ref(false);
+
+onMounted(() => {
+  video.value.addEventListener("loadeddata", (e) => {
+    if (e.target) {
+      setTimeout(() => {
+        isLoaded.value = true;
+      }, 500);
+    }
+  });
+});
+
+onBeforeUnmount(() => {
+  video.value.pause();
+  video.value.currentTime = 0;
+  video.value.src = "";
+});
+
+watch(
+  () => isLoaded.value,
+  () => {
+    if (isLoaded.value) {
+      setTimeout(() => video.value.play(), 500);
+    }
+  }
+);
 </script>

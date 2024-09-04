@@ -184,14 +184,7 @@
             placeholder="Add Comment ......."
           />
         </div>
-        <button
-          :disabled="comment"
-          @click="($event) => addComment()"
-          :class="comment ? 'text-[#F02c56] cursor-pointer' : 'text-gray-400'"
-          class="pr-1 ml-5 text-sm font-semibold"
-        >
-          Post
-        </button>
+        <button>Post</button>
       </div>
     </div>
   </div>
@@ -200,20 +193,22 @@
 let inputFocused = ref(false);
 let comment = ref(null);
 
-const route = useRoute();
-const router = useRouter();
+let route = ref(null);
+let router = ref();
 
 let video = ref(null);
 let isLoaded = ref(false);
 
 onMounted(() => {
-  video.value.addEventListener("loadeddata", (e) => {
-    if (e.target) {
-      setTimeout(() => {
-        isLoaded.value = true;
-      }, 500);
-    }
-  });
+  video.value.play()
+  isLoaded.value = true
+  // video.value.addEventListener("loadeddata", (e) => {
+  //   if (e.target) {
+  //     setTimeout(() => {
+  //       isLoaded.value = true;
+  //     }, 50);
+  //   }
+  // });
 });
 
 onBeforeUnmount(() => {
